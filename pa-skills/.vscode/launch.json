@@ -1,0 +1,60 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "调试 CLI - 帮助",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["tsx", "src/cli.ts", "--help"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "调试 CLI - 状态",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["tsx", "src/cli.ts", "status"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "调试 CLI - 列表",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["tsx", "src/cli.ts", "list"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "调试 CLI - 添加技能",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["tsx", "src/cli.ts", "add", "${input:技能路径:./examples/example-skill}"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "调试已构建的 CLI",
+      "program": "${workspaceFolder}/bin/cli.mjs",
+      "args": ["status"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ]
+}

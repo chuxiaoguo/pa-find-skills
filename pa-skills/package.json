@@ -1,0 +1,69 @@
+{
+  "name": "pingancoder-skills",
+  "version": "1.0.0",
+  "description": "Pingancoder Skills - 企业内网版本技能管理工具",
+  "type": "module",
+  "bin": {
+    "pa-skills": "./bin/cli.mjs",
+    "pas": "./bin/cli.mjs"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "npx tsx src/cli.ts",
+    "dev:watch": "npx nodemon",
+    "check": "node scripts/check.js",
+    "format": "prettier --write 'src/**/*.ts' 'scripts/**/*.js'",
+    "format:check": "prettier --check 'src/**/*.ts' 'scripts/**/*.js'",
+    "test": "vitest",
+    "type-check": "tsc --noEmit",
+    "prepublishOnly": "npm run build && npm run type-check"
+  },
+  "keywords": [
+    "cli",
+    "agent-skills",
+    "skills",
+    "ai-agents",
+    "gemini",
+    "opencode",
+    "openclaw",
+    "pingancoder",
+    "内网",
+    "企业版"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "内部Git仓库"
+  },
+  "homepage": "内部文档地址",
+  "bugs": {
+    "url": "内部Issue跟踪"
+  },
+  "author": "Pingancoder Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@clack/prompts": "^0.11.0",
+    "@types/node": "^22.10.0",
+    "gray-matter": "^4.0.3",
+    "nodemon": "^3.1.4",
+    "picocolors": "^1.1.1",
+    "prettier": "^3.8.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17",
+    "xdg-basedir": "^5.1.0"
+  },
+  "dependencies": {
+    "extract-zip": "^2.0.1"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@10.17.1"
+}

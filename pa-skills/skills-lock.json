@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "skills": {
+    "my-test": {
+      "source": "./test-skill",
+      "sourceType": "local",
+      "computedHash": "ff8b7d85a052e9a8162812ccf35a8e41b5e6db832d000b4020ef0d428337ffcf"
+    },
+    "test-skill": {
+      "source": "C:/Users/Administrator/AppData/Local/Temp/test-skill",
+      "sourceType": "local",
+      "computedHash": "f99aaee997b27b314fdf30bd1fec486b2bbc28facd014ba4cf96c1e99961b030"
+    },
+    "zip-test": {
+      "source": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\zip-test.zip",
+      "sourceType": "local-zip",
+      "computedHash": "669ee540b51189068cdee056848875ea83e6c453bb6a46b86ce4d68a22ba44dd"
+    }
+  }
+}

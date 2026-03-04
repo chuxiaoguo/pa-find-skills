@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "zip-test": {
+      "source": "d:\\pingan\\pa-find-skills\\zip-test.zip",
+      "sourceType": "local-zip",
+      "computedHash": "1920fdedcc00ca9ec255d9d859bd86c67895f90b7e1abe07c30d59c330156927"
+    }
+  }
+}
