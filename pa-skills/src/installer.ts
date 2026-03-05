@@ -12,8 +12,6 @@ import {
   lstat,
   rm,
   readlink,
-  writeFile,
-  stat,
   realpath,
 } from 'fs/promises';
 import { join, basename, normalize, resolve, sep, relative, dirname } from 'path';
@@ -24,7 +22,7 @@ import { AGENTS_DIR, SKILLS_SUBDIR } from './constants.js';
 
 export type InstallMode = 'symlink' | 'copy';
 
-interface InstallResult {
+export interface InstallResult {
   success: boolean;
   path: string;
   canonicalPath?: string;

@@ -7,15 +7,213 @@ import pc from 'picocolors';
 import { parseSource } from './source-parser.js';
 import { discoverSkills } from './skills.js';
 import { installSkillForAllAgents } from './installer.js';
-import { detectInstalledAgents, agents } from './agents.js';
+import { agents } from './agents.js';
 import { findProvider } from './providers/index.js';
-import { getSkillFromLock, addSkillToLock, saveSelectedAgents, getLastSelectedAgents } from './skill-lock.js';
+import { addSkillToLock, saveSelectedAgents, getLastSelectedAgents } from './skill-lock.js';
 import { addSkillToLocalLock, computeSkillFolderHash } from './local-lock.js';
 import { getGlobalZipHandler } from './zip-handler.js';
 import { getGlobalAuthManager } from './pingancoder-auth.js';
 import type { Skill, AgentType } from './types.js';
 
+/**
+ * 从多个技能中选择一个
+ * 如果只有一个技能，直接返回；如果有多个，让用户选择
+ */
+async function selectSkill(skills: Skill[]): Promise<Skill | null> {
+  if (skills.length === 0) {
+    return null;
+  }
+
+  if (skills.length === 1) {
+    return skills[0];
+  }
+
+  p.log.info(`发现 ${pc.cyan(String(skills.length))} 个技能`);
+
+  const selected = await p.select({
+    message: '请选择要安装的技能',
+    options: skills.map(s => {
+      const desc = s.description
+        ? ` - ${s.description.slice(0, 50)}${s.description.length > 50 ? '...' : ''}`
+        : '';
+      return {
+        value: s.name,
+        label: `${s.name}${desc}`,
+      };
+    }),
+  });
+
+  if (p.isCancel(selected)) {
+    return null;
+  }
+
+  return skills.find(s => s.name === selected) ?? null;
+}
+
+/**
+ * 显示安装摘要
+ */
+function showInstallSummary(
+  skill: Skill,
+  selectedAgents: AgentType[],
+  global: boolean,
+  mode: 'symlink' | 'copy'
+): string {
+  const scope = global ? '全局' : '项目';
+  const modeText = mode === 'symlink' ? '符号链接' : '复制';
+
+  const lines: string[] = [
+    `技能名称：${pc.cyan(skill.name)}`,
+  ];
+
+  if (skill.description) {
+    lines.push(`描述：${skill.description}`);
+  }
+
+  lines.push(
+    ``,
+    `安装范围：${pc.yellow(scope)}`,
+    `安装模式：${pc.yellow(modeText)}`,
+    ``,
+    `目标代理：`,
+    ...selectedAgents.map(a => `  • ${agents[a].displayName}`),
+  );
+
+  if (global) {
+    lines.push(``, `规范位置：`, `  ~/.agents/skills/${skill.name}`);
+  }
+
+  return lines.join('\n');
+}
+
+/**
+ * 显示安装结果详情
+ */
+function showInstallResults(
+  skill: Skill,
+  selectedAgents: AgentType[],
+  results: Map<AgentType, import('./installer.js').InstallResult>,
+  global: boolean
+): string {
+  const lines: string[] = [];
+
+  // 按代理分组显示结果
+  for (const agentType of selectedAgents) {
+    const agent = agents[agentType];
+    const result = results.get(agentType);
+
+    if (!result) continue;
+
+    const icon = result.success ? pc.green('✓') : pc.red('✗');
+    const status = result.success
+      ? pc.green('成功')
+      : pc.red(`失败: ${result.error || '未知错误'}`);
+
+    lines.push(`${icon} ${agent.displayName}: ${status}`);
+
+    if (result.success) {
+      // 显示安装路径
+      const mode = result.symlinkFailed
+        ? pc.yellow('copy (symlink失败)')
+        : pc.blue(result.mode);
+
+      // 对于 symlink 模式，显示两个路径
+      if (result.mode === 'symlink' && result.canonicalPath) {
+        lines.push(`  ${pc.dim('→')} ${result.canonicalPath}`);
+        lines.push(`  ${pc.dim('→')} ${result.path}`);
+      } else {
+        lines.push(`  ${mode} → ${result.path}`);
+      }
+    }
+    lines.push('');
+  }
+
+  return lines.filter(Boolean).join('\n');
+}
+
+/**
+ * 交互式选择安装选项
+ * @param globalFromCmd 命令行传入的 global 值（如果有）
+ * @returns 安装选项
+ */
+async function selectInstallOptions(globalFromCmd?: boolean): Promise<{
+  global: boolean;
+  mode: 'symlink' | 'copy';
+}> {
+  // 如果命令行没有指定 global，则询问
+  let global = globalFromCmd ?? false;
+  if (globalFromCmd === undefined) {
+    const scope = await p.select({
+      message: '选择安装范围',
+      options: [
+        {
+          value: 'false',
+          label: '项目级 (仅当前项目可用)',
+        },
+        {
+          value: 'true',
+          label: '全局 (所有项目可用)',
+        },
+      ],
+      initialValue: 'false',
+    });
+
+    if (p.isCancel(scope)) {
+      throw new Error('操作已取消');
+    }
+
+    global = scope === 'true';
+  }
+
+  // 询问安装模式
+  const mode = await p.select({
+    message: '选择安装模式',
+    options: [
+      {
+        value: 'symlink',
+        label: '符号链接 (推荐，节省空间，便于更新)',
+      },
+      {
+        value: 'copy',
+        label: '复制 (兼容性更好，占用更多空间)',
+      },
+    ],
+    initialValue: 'symlink',
+  });
+
+  if (p.isCancel(mode)) {
+    throw new Error('操作已取消');
+  }
+
+  return {
+    global,
+    mode: mode as 'symlink' | 'copy',
+  };
+}
+
+/**
+ * 显示 PA-SKILLS 标题
+ */
+function showPaSkillsHeader(): void {
+  const header = pc.cyan(`
+┌──────────────────────────────────────┐
+│                                      │
+│  ┌─┐┌─┐┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐  │
+│  │P││A││- ││S ││K ││I ││L ││L ││S │  │
+│  └─┘└─┘└──┘└──┘└──┘└──┘└──┘└──┘└──┘  │
+│                                      │
+│     PA - SKILLS                      │
+│                                      │
+└──────────────────────────────────────┘
+`);
+
+  console.log(header);
+}
+
 export async function runAdd(args: string[]): Promise<void> {
+  // 显示 PA-SKILLS 标题
+  showPaSkillsHeader();
+
   p.intro(pc.cyan('欢迎使用 Pingancoder Skills'));
 
   // 解析参数：移除 --global 和 -g 标志
@@ -42,13 +240,13 @@ export async function runAdd(args: string[]): Promise<void> {
       return;
     }
 
-    await addSkill(source, useGlobal);
+    await addSkill(source, useGlobal || undefined);
   } else {
-    await addSkill(filteredArgs[0], useGlobal);
+    await addSkill(filteredArgs[0], useGlobal || undefined);
   }
 }
 
-async function addSkill(sourceStr: string, global: boolean = false): Promise<void> {
+async function addSkill(sourceStr: string, global: boolean | undefined = undefined): Promise<void> {
   const parsed = parseSource(sourceStr);
 
   p.log.info(`从 ${parsed.type} 获取技能...`);
@@ -71,7 +269,17 @@ async function addSkill(sourceStr: string, global: boolean = false): Promise<voi
       if (skills.length === 0) {
         throw new Error('Zip 文件中未找到有效技能');
       }
-      skill = skills[0];
+
+      // 多技能选择
+      skill = await selectSkill(skills);
+      if (!skill) {
+        if (tempExtractPath) {
+          const zipHandler = getGlobalZipHandler();
+          await zipHandler.cleanup(tempExtractPath);
+        }
+        p.cancel('操作已取消');
+        return;
+      }
     } else if (parsed.type === 'local') {
       // 使用 direct 模式，只在指定路径查找 SKILL.md，不搜索子目录
       // 与 zip 安装行为保持一致
@@ -86,7 +294,13 @@ async function addSkill(sourceStr: string, global: boolean = false): Promise<voi
           `如果 SKILL.md 在子目录中，请直接指定子目录路径。`
         );
       }
-      skill = skills[0];
+
+      // 多技能选择（本地路径也可能有多个技能）
+      skill = await selectSkill(skills);
+      if (!skill) {
+        p.cancel('操作已取消');
+        return;
+      }
     } else if (parsed.type === 'pingancoder-api') {
       const authManager = getGlobalAuthManager();
       const status = await authManager.getStatus();
@@ -111,7 +325,17 @@ async function addSkill(sourceStr: string, global: boolean = false): Promise<voi
         if (skills.length === 0) {
           throw new Error('技能包中未找到有效技能');
         }
-        skill = skills[0];
+
+        // 多技能选择
+        skill = await selectSkill(skills);
+        if (!skill) {
+          if (tempExtractPath) {
+            const zipHandler = getGlobalZipHandler();
+            await zipHandler.cleanup(tempExtractPath);
+          }
+          p.cancel('操作已取消');
+          return;
+        }
       } else {
         throw new Error('不支持的技能格式');
       }
@@ -210,11 +434,31 @@ async function addSkill(sourceStr: string, global: boolean = false): Promise<voi
     return;
   }
 
+  // 交互式选择安装范围和模式
+  const installOptions = await selectInstallOptions(global);
+
+  // 显示安装摘要
+  p.note(showInstallSummary(skill, selectedAgents, installOptions.global, installOptions.mode), '安装摘要');
+
+  // 确认安装
+  const confirmed = await p.confirm({
+    message: '确认安装？',
+  });
+
+  if (p.isCancel(confirmed) || !confirmed) {
+    if (tempExtractPath) {
+      const zipHandler = getGlobalZipHandler();
+      await zipHandler.cleanup(tempExtractPath);
+    }
+    p.cancel('操作已取消');
+    return;
+  }
+
   const s = p.spinner();
   s.start('正在安装...');
 
   try {
-    const results = await installSkillForAllAgents(skill, { agents: selectedAgents, global });
+    const results = await installSkillForAllAgents(skill, { agents: selectedAgents, global: installOptions.global });
 
     let successCount = 0;
     let failCount = 0;
@@ -225,10 +469,8 @@ async function addSkill(sourceStr: string, global: boolean = false): Promise<voi
 
       if (result.success) {
         successCount++;
-        p.log.success(`已安装到 ${agents[agentType].displayName}`);
       } else {
         failCount++;
-        p.log.error(`安装到 ${agents[agentType].displayName} 失败: ${result.error}`);
       }
     }
 
@@ -247,7 +489,11 @@ async function addSkill(sourceStr: string, global: boolean = false): Promise<voi
       });
       await saveSelectedAgents(selectedAgents);
 
-      s.stop(`安装完成！(${successCount} 个代理成功${failCount > 0 ? `, ${failCount} 个失败` : ''})`);
+      s.stop(`安装完成！`);
+
+      // 显示详细安装结果
+      p.note(showInstallResults(skill, selectedAgents, results, installOptions.global), '安装详情');
+
       p.outro(pc.green('✓ 技能安装成功'));
     } else {
       s.stop('安装失败');

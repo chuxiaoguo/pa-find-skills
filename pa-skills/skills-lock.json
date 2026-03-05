@@ -7,14 +7,19 @@
       "computedHash": "ff8b7d85a052e9a8162812ccf35a8e41b5e6db832d000b4020ef0d428337ffcf"
     },
     "test-skill": {
-      "source": "C:/Users/Administrator/AppData/Local/Temp/test-skill",
+      "source": "/tmp/test-skill",
       "sourceType": "local",
       "computedHash": "f99aaee997b27b314fdf30bd1fec486b2bbc28facd014ba4cf96c1e99961b030"
     },
+    "web-design-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "computedHash": "a6a44d5498f7e8f68289902f3dedfc6f38ae0cee1e96527c80724cf27f727c2a"
+    },
     "zip-test": {
-      "source": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\zip-test.zip",
-      "sourceType": "local-zip",
-      "computedHash": "669ee540b51189068cdee056848875ea83e6c453bb6a46b86ce4d68a22ba44dd"
+      "source": "/Users/zcg/Desktop/pa-find-skills/test-zip-skill",
+      "sourceType": "local",
+      "computedHash": "1920fdedcc00ca9ec255d9d859bd86c67895f90b7e1abe07c30d59c330156927"
     }
   }
 }
