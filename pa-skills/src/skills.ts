@@ -104,6 +104,8 @@ export interface DiscoverSkillsOptions {
   includeInternal?: boolean;
   /** 搜索所有子目录 */
   fullDepth?: boolean;
+  /** 直接模式：只在指定路径查找，不搜索子目录（与zip安装行为一致） */
+  direct?: boolean;
 }
 
 /**
@@ -117,6 +119,19 @@ export async function discoverSkills(
   const skills: Skill[] = [];
   const seenNames = new Set<string>();
   const searchPath = subpath ? join(basePath, subpath) : basePath;
+
+  // 直接模式：只在指定路径查找 SKILL.md，不搜索子目录
+  // 与 zip 安装行为保持一致
+  if (options?.direct) {
+    if (await hasSkillMd(searchPath)) {
+      const skillMdPath = join(searchPath, 'SKILL.md');
+      let skill = await parseSkillMd(skillMdPath, options);
+      if (skill) {
+        skills.push(skill);
+      }
+    }
+    return skills;
+  }
 
   // 获取插件分组信息
   const pluginGroupings = await getPluginGroupings(searchPath);

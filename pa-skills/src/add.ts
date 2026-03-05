@@ -73,9 +73,18 @@ async function addSkill(sourceStr: string, global: boolean = false): Promise<voi
       }
       skill = skills[0];
     } else if (parsed.type === 'local') {
-      const skills = await discoverSkills(parsed.localPath!, parsed.subpath);
+      // 使用 direct 模式，只在指定路径查找 SKILL.md，不搜索子目录
+      // 与 zip 安装行为保持一致
+      const skills = await discoverSkills(parsed.localPath!, parsed.subpath, { direct: true });
       if (skills.length === 0) {
-        throw new Error('本地路径中未找到有效技能');
+        throw new Error(
+          `本地路径中未找到有效技能：${parsed.localPath}\n\n` +
+          `请确保 SKILL.md 文件直接在指定路径下。\n\n` +
+          `正确结构：\n` +
+          `  ${parsed.localPath}/\n` +
+          `  └── SKILL.md  ← 应该直接在这里\n\n` +
+          `如果 SKILL.md 在子目录中，请直接指定子目录路径。`
+        );
       }
       skill = skills[0];
     } else if (parsed.type === 'pingancoder-api') {
