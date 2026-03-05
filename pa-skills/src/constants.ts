@@ -48,7 +48,7 @@ export const DEFAULT_TOKEN_EXPIRY = 24 * 60 * 60 * 1000;
 
 /** 默认内网 API 基础地址 */
 export const DEFAULT_API_BASE_URL =
-  process.env.PINGANCODER_API_URL || 'http://internal-server/api';
+  process.env.PINGANCODER_API_URL || 'https://market.paic.com.cn';
 
 /** 默认下载超时时间（30秒） */
 export const DEFAULT_DOWNLOAD_TIMEOUT = 30000;

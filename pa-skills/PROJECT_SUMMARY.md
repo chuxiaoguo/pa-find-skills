@@ -30,7 +30,7 @@
 - **Gemini CLI** (`.gemini/skills`)
 - **OpenCode** (`.agents/skills`)
 - **OpenClaw** (`skills/`)
-- **Pingancoder** (`.agents/skills`)
+- **Pingancoder** (`.pingancoder/skills`)
 
 ### 3. 认证系统
 

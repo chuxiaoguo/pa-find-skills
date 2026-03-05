@@ -92,6 +92,104 @@ export interface PingancoderSkill {
 }
 
 /**
+ * 真实 API 的技能列表响应
+ */
+export interface MarketSkillListResponse {
+  code: number;
+  message: string;
+  success: boolean;
+  timestamp?: number;
+  data: MarketSkill[];
+}
+
+/**
+ * 真实 API 的技能列表项
+ */
+export interface MarketSkill {
+  id: number;
+  title: string;
+  icon: string;
+  logo?: string;
+  description?: string;
+  category?: string;
+  version?: string;
+  author?: string;
+  authorId?: number;
+  downloads?: number;
+  rating?: number;
+  tags?: string[];
+  createdAt?: string;
+  updatedAt?: string;
+  isPublished?: boolean;
+  isRecommended?: boolean;
+  isFree?: boolean;
+  price?: number;
+  originalPrice?: number;
+  fileSize?: string;
+  fileType?: string;
+  downloadUrl?: string;
+  previewImages?: string[];
+  screenshots?: string[];
+  videoUrl?: string;
+  documentationUrl?: string;
+  sourceCodeUrl?: string;
+  license?: string;
+  dependencies?: string[];
+  compatibility?: string[];
+  platform?: string[];
+  language?: string;
+  framework?: string;
+}
+
+/**
+ * 真实 API 的技能详情响应
+ */
+export interface MarketSkillDetailResponse {
+  code: number;
+  message: string;
+  success: boolean;
+  timestamp?: number;
+  data: MarketSkillDetail;
+  file?: MarketSkillFile;
+}
+
+/**
+ * 真实 API 的技能详情
+ */
+export interface MarketSkillDetail {
+  id: number;
+  title?: string;
+  description?: string;
+  version?: string;
+  author?: string;
+  categoryId?: number;
+  categoryName?: string;
+  tags?: string[];
+  downloadCount?: number;
+  rating?: number;
+  ratingCount?: number;
+  isPublished?: boolean;
+  isRecommended?: boolean;
+  isFree?: boolean;
+  price?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
+}
+
+/**
+ * 真实 API 的文件信息
+ */
+export interface MarketSkillFile {
+  downloadUrl: string;
+  appFileName: string;
+  md5?: string;
+  fileSize?: number;
+  fileType?: string;
+  uploadTime?: string;
+}
+
+/**
  * 认证会话信息
  */
 export interface AuthSession {

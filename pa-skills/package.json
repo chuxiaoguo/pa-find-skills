@@ -23,7 +23,9 @@
     "format:check": "prettier --check 'src/**/*.ts' 'scripts/**/*.js'",
     "test": "vitest",
     "type-check": "tsc --noEmit",
-    "prepublishOnly": "npm run build && npm run type-check"
+    "prepublishOnly": "npm run build && npm run type-check",
+    "mock-server": "npx tsx test/mock-server.ts",
+    "test:mock": "npx tsx test/integration-test.ts"
   },
   "keywords": [
     "cli",
@@ -50,6 +52,8 @@
   "devDependencies": {
     "@clack/prompts": "^0.11.0",
     "@types/node": "^22.10.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
     "gray-matter": "^4.0.3",
     "nodemon": "^3.1.4",
     "picocolors": "^1.1.1",
@@ -60,6 +64,7 @@
     "xdg-basedir": "^5.1.0"
   },
   "dependencies": {
+    "adm-zip": "^0.5.16",
     "extract-zip": "^2.0.1"
   },
   "engines": {

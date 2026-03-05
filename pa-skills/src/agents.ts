@@ -70,10 +70,10 @@ export const agents: Record<AgentType, AgentConfig> = {
   pingancoder: {
     name: 'pingancoder',
     displayName: 'Pingancoder',
-    skillsDir: '.agents/skills',
-    globalSkillsDir: join(configHome, 'pingancoder/skills'),
+    skillsDir: '.pingancoder/skills',
+    globalSkillsDir: join(home, '.pingancoder/skills'),
     detectInstalled: async () => {
-      return existsSync(join(configHome, 'pingancoder'));
+      return existsSync(join(home, '.pingancoder'));
     },
   },
 };

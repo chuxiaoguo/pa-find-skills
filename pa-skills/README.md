@@ -79,7 +79,7 @@ pa-skills status
 - **Gemini CLI**: `.gemini/skills`
 - **OpenCode**: `.agents/skills`
 - **OpenClaw**: `skills/`
-- **Pingancoder**: `.agents/skills`
+- **Pingancoder**: `.pingancoder/skills`
 
 ## 配置
 
