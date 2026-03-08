@@ -1,0 +1,96 @@
+{
+  "name": "vscode-skills-manager",
+  "displayName": "Skills Manager",
+  "description": "Visualize and manage your local pa-skills in VSCode",
+  "version": "0.0.1",
+  "publisher": "pingancoder",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "skillsManager.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "skillsManager.install",
+        "title": "Install Skill",
+        "icon": "$(add)"
+      },
+      {
+        "command": "skillsManager.openMarket",
+        "title": "Open Skill Market",
+        "icon": "$(cloud-download)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "skillsManagerContainer",
+          "title": "Skills Manager",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "skillsManagerContainer": [
+        {
+          "id": "skillsManagerView",
+          "name": "Skills",
+          "type": "webview"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "skillsManager.refresh",
+          "when": "view == skillsManagerView",
+          "group": "navigation"
+        },
+        {
+          "command": "skillsManager.install",
+          "when": "view == skillsManagerView",
+          "group": "navigation"
+        },
+        {
+          "command": "skillsManager.openMarket",
+          "when": "view == skillsManagerView",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile:webview && npm run compile",
+    "compile": "webpack --mode production",
+    "compile:webview": "webpack --mode production --config webview-webpack.config.js",
+    "watch": "npm run watch:webview && webpack --mode development --watch",
+    "watch:webview": "webpack --mode development --config webview-webpack.config.js --watch",
+    "webpack": "webpack --mode development",
+    "tsc": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/vscode": "^1.80.0",
+    "css-loader": "^6.8.0",
+    "style-loader": "^3.3.0",
+    "ts-loader": "^9.5.0",
+    "typescript": "^5.3.0",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.0"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

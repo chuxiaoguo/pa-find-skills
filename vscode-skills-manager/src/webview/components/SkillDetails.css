@@ -1,0 +1,137 @@
+.skill-details {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--vscode-sideBar-background);
+  color: var(--vscode-sideBar-foreground);
+  padding: 16px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* 头部 */
+.details-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--vscode-panel-border);
+}
+
+.back-button {
+  padding: 6px 12px;
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.back-button:hover {
+  background: var(--vscode-button-secondaryHoverBackground);
+}
+
+.details-title {
+  flex: 1;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--vscode-foreground);
+}
+
+.uninstall-button {
+  padding: 6px 12px;
+  background: var(--vscode-errorBackground);
+  color: var(--vscode-errorForeground);
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.uninstall-button:hover {
+  background: var(--vscode-button-hoverBackground);
+}
+
+/* 分区 */
+.details-section {
+  margin-bottom: 24px;
+}
+
+.section-heading {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: var(--vscode-foreground);
+}
+
+/* 描述 */
+.details-description {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--vscode-descriptionForeground);
+}
+
+/* 元数据网格 */
+.metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 12px;
+}
+
+.metadata-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  background: var(--vscode-editor-background);
+  border-radius: 4px;
+}
+
+.metadata-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--vscode-descriptionForeground);
+}
+
+.metadata-value {
+  font-size: 13px;
+  color: var(--vscode-foreground);
+  word-break: break-word;
+}
+
+.metadata-path {
+  font-family: var(--vscode-editor-font-family);
+  font-size: 12px;
+}
+
+/* 加载状态 */
+.details-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 14px;
+  color: var(--vscode-descriptionForeground);
+}
+
+/* 响应式 */
+@media (max-width: 600px) {
+  .details-header {
+    flex-wrap: wrap;
+  }
+
+  .details-title {
+    width: 100%;
+  }
+
+  .metadata-grid {
+    grid-template-columns: 1fr;
+  }
+}

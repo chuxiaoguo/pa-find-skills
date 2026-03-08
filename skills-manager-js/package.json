@@ -1,0 +1,36 @@
+{
+  "name": "skills-manager",
+  "displayName": "Skills Manager",
+  "description": "Visualize and manage your local pa-skills",
+  "version": "0.0.1",
+  "publisher": "pingancoder",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": ["Other"],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "skillsManager.show",
+        "title": "Skills Manager: 打开管理面板"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "skillsManager.show",
+        "key": "ctrl+shift+s",
+        "mac": "cmd+shift+s"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "skillsManagerView",
+          "name": "🎯 Skills Manager",
+          "type": "webview"
+        }
+      ]
+    }
+  }
+}

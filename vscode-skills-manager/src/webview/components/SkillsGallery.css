@@ -1,0 +1,227 @@
+.skills-gallery {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--vscode-sideBar-background);
+  color: var(--vscode-sideBar-foreground);
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* 工具栏 */
+.gallery-toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 150px;
+  padding: 8px 12px;
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  border: 1px solid var(--vscode-input-border);
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.search-input::placeholder {
+  color: var(--vscode-input-placeholderForeground);
+}
+
+.filter-select {
+  padding: 8px 12px;
+  background: var(--vscode-dropdown-background);
+  color: var(--vscode-dropdown-foreground);
+  border: 1px solid var(--vscode-dropdown-border);
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.install-button {
+  padding: 8px 16px;
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.install-button:hover {
+  background: var(--vscode-button-hoverBackground);
+}
+
+/* 统计 */
+.gallery-stats {
+  font-size: 12px;
+  color: var(--vscode-descriptionForeground);
+  margin-bottom: 16px;
+}
+
+/* 分区 */
+.skill-section {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: var(--vscode-sideBar-foreground);
+}
+
+/* 响应式网格 */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+/* 技能卡片 */
+.skill-card {
+  background: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skill-card:hover {
+  border-color: var(--vscode-focusBorder);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--vscode-editor-foreground);
+  line-height: 1.4;
+  flex: 1;
+}
+
+.card-badges {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.badge-local {
+  background: var(--vscode-textBlockQuote-background);
+  color: var(--vscode-textBlockQuote-foreground);
+}
+
+.badge-local-zip {
+  background: var(--vscode-textBlockQuote-background);
+  color: var(--vscode-textBlockQuote-foreground);
+}
+
+.badge-pingancoder-api {
+  background: var(--vscode-textCodeBlock-background);
+  color: var(--vscode-textCodeBlock-foreground);
+}
+
+.badge-symlink {
+  background: var(--vscode-editorInfo-background);
+  color: var(--vscode-editorInfo-foreground);
+}
+
+.card-description {
+  margin: 0;
+  font-size: 13px;
+  color: var(--vscode-descriptionForeground);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.card-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--vscode-descriptionForeground);
+  padding-top: 8px;
+  border-top: 1px solid var(--vscode-panel-border);
+}
+
+.card-version,
+.card-author,
+.card-date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--vscode-foreground);
+}
+
+.empty-description {
+  font-size: 14px;
+  color: var(--vscode-descriptionForeground);
+  max-width: 300px;
+}
+
+/* 响应式调整 */
+@media (max-width: 600px) {
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-toolbar {
+    flex-direction: column;
+  }
+
+  .filter-select,
+  .install-button {
+    width: 100%;
+  }
+}
